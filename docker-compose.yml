@@ -1,0 +1,51 @@
+# Update Time: 2024-1-4 0:50
+version: "3.4"
+
+services:
+  # Home Assistant
+  homeassistant:
+    image: "ghcr.io/home-assistant/home-assistant:stable"
+    networks: [network_cluster]
+    restart: on-failure    
+    environment:
+      TZ: ${TZ}  
+    volumes:
+      - nfs_homeassistant_conf:/config
+      - /run/dbus:/run/dbus:ro         
+    deploy:
+      labels:
+        - "traefik.enable=true"
+        - "traefik.http.routers.homeassistant.rule=Host(`homeassistant.${DOMAIN_SWARM}`)"
+        - "traefik.http.routers.homeassistant.entrypoints=websecure"
+        - "traefik.http.routers.homeassistant.service=homeassistant"
+        - "traefik.http.routers.homeassistant.middlewares=cors-headers@file,noauth-chain@file"
+        - "traefik.http.services.homeassistant.loadbalancer.server.port=8123"
+        - homepage.group=AI
+        - homepage.name=Home Assistant
+        - homepage.icon=homeassistant.png
+        - homepage.href=https://homeassistant.${DOMAIN_SWARM}:4/
+        - homepage.description=Home Assistant
+        - homepage.siteMonitor=http://homeassistant:8123
+        - homepage.weight=10
+      mode: replicated
+      replicas: 1
+      placement:
+        constraints:
+          - node.labels.type == vm
+          - node.labels.automation == true     
+                     
+networks:
+  network_cluster:
+    external: true
+
+x-common-keys-volume: &common-keys-volume
+  type: nfs
+  o: addr=${NFS_SERVER},rw,nfsvers=4
+
+volumes:
+  # NFS
+  nfs_homeassistant_conf:
+    driver: local
+    driver_opts:
+      <<: *common-keys-volume
+      device: :${NFS_DEVICE}/automation/xiaogpt/homeassistant/conf        
