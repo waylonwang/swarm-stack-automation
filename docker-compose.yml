@@ -1,4 +1,4 @@
-# Update Time: 2024-1-4 0:50
+# Update Time: 2024-1-4 1:05
 version: "3.4"
 
 services:
@@ -24,7 +24,7 @@ services:
         - homepage.name=Home Assistant
         - homepage.icon=homeassistant.png
         - homepage.href=https://homeassistant.${DOMAIN_SWARM}:4/
-        - homepage.description=Home Assistant
+        - homepage.description=Home Assistant智能家庭助理
         - homepage.siteMonitor=http://homeassistant:8123
         - homepage.weight=10
       mode: replicated
