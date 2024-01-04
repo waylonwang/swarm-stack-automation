@@ -15,7 +15,7 @@ services:
     deploy:
       labels:
         - "traefik.enable=true"
-        - "traefik.http.routers.homeassistant.rule=Host(`homeassistant.${DOMAIN_SWARM}`)"
+        - "traefik.http.routers.homeassistant.rule=Host(`ha.${DOMAIN_SWARM}`)"
         - "traefik.http.routers.homeassistant.entrypoints=websecure"
         - "traefik.http.routers.homeassistant.service=homeassistant"
         - "traefik.http.routers.homeassistant.middlewares=cors-headers@file,noauth-chain@file"
@@ -23,7 +23,7 @@ services:
         - homepage.group=AI
         - homepage.name=Home Assistant
         - homepage.icon=homeassistant.png
-        - homepage.href=https://homeassistant.${DOMAIN_SWARM}:4/
+        - homepage.href=https://ha.${DOMAIN_SWARM}:4/
         - homepage.description=Home Assistant智能家庭助理
         - homepage.siteMonitor=http://homeassistant:8123
         - homepage.weight=10
