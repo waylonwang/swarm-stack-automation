@@ -23,7 +23,7 @@ services:
         - "traefik.http.routers.homeassistant.rule=Host(`ha.${DOMAIN_SWARM}`)"
         - "traefik.http.routers.homeassistant.entrypoints=websecure"
         - "traefik.http.routers.homeassistant.service=homeassistant"
-        - "traefik.http.routers.homeassistant.middlewares=,websocket@file,noauth-chain@file"
+        - "traefik.http.routers.homeassistant.middlewares=cors-headers@file,noauth-chain@file"
         - "traefik.http.services.homeassistant.loadbalancer.server.port=8123"
         - homepage.group=AI
         - homepage.name=Home Assistant
