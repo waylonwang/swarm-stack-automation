@@ -11,6 +11,7 @@ services:
       TZ: ${TZ}  
     volumes:
       - nfs_homeassistant_conf:/config
+      - /etc/localtime:/etc/localtime:ro
       - /run/dbus:/run/dbus:ro         
     deploy:
       labels:
