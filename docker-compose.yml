@@ -8,8 +8,8 @@ services:
     networks: [network_cluster]
     restart: on-failure    
     environment:
-      HTTP_PROXY: ${CLASH_HTTP_PROXY}
-      HTTPS_PROXY: ${CLASH_HTTP_PROXY}
+      http_proxy: ${CLASH_HTTP_PROXY}
+      https_proxy: ${CLASH_HTTP_PROXY}
       TZ: ${TZ}  
     volumes:
       - nfs_homeassistant_conf:/config
