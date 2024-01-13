@@ -25,7 +25,7 @@ services:
         - "traefik.http.routers.homeassistant.service=homeassistant"
         - "traefik.http.routers.homeassistant.middlewares=cors-headers@file,noauth-chain@file"
         - "traefik.http.services.homeassistant.loadbalancer.server.port=8123"
-        - homepage.group=AI
+        - homepage.group=AI & Automation
         - homepage.name=Home Assistant
         - homepage.icon=home-assistant.png
         - homepage.href=https://ha.${DOMAIN_SWARM}:4/
