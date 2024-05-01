@@ -4,7 +4,7 @@ version: "3.4"
 services:
   # Home Assistant
   homeassistant:
-    image: "ghcr.nju.edu.cn/home-assistant/home-assistant:stable"
+    image: ghcr.nju.edu.cn/home-assistant/home-assistant:stable
     networks: [network_cluster]
     restart: on-failure    
     environment:
@@ -16,7 +16,9 @@ services:
     volumes:
       - nfs_homeassistant_conf:/config
       - /etc/localtime:/etc/localtime:ro
-      - /run/dbus:/run/dbus:ro         
+      - /run/dbus:/run/dbus:ro       
+    ports:
+      - 8123:8123
     deploy:
       labels:
         - "traefik.enable=true"
