@@ -3,41 +3,41 @@ version: "3.4"
 
 services:
   # Home Assistant
-  homeassistant:
-    image: ghcr.nju.edu.cn/home-assistant/home-assistant:stable
-    networks: [network_cluster]
-    restart: on-failure    
-    environment:
-      http_proxy: ${OPENCLASH_HTTP_PROXY}
-      https_proxy: ${OPENCLASH_HTTP_PROXY}
-      HTTP_PROXY: ${OPENCLASH_HTTP_PROXY}
-      HTTPS_PROXY: ${OPENCLASH_HTTP_PROXY}
-      TZ: ${TZ}  
-    volumes:
-      - nfs_homeassistant_conf:/config
-      - /etc/localtime:/etc/localtime:ro
-      - /run/dbus:/run/dbus:ro       
-    deploy:
-      labels:
-        - "traefik.enable=true"
-        - "traefik.http.routers.homeassistant.rule=Host(`ha.${DOMAIN_SWARM}`),`ha.${DOMAIN_EMERGENCY}`"
-        - "traefik.http.routers.homeassistant.entrypoints=websecure"
-        - "traefik.http.routers.homeassistant.service=homeassistant"
-        - "traefik.http.routers.homeassistant.middlewares=cors-headers@file,noauth-chain@file"
-        - "traefik.http.services.homeassistant.loadbalancer.server.port=8123"
-        - homepage.group=AI & Automation
-        - homepage.name=Home Assistant
-        - homepage.icon=home-assistant.png
-        - homepage.href=https://ha.${DOMAIN_SWARM}:4/
-        - homepage.description=智能家居
-        - homepage.siteMonitor=http://homeassistant:8123
-        - homepage.weight=10
-      mode: replicated
-      replicas: 1
-      placement:
-        constraints:
-          - node.labels.type == vm
-          - node.labels.automation == true   
+  # homeassistant:
+  #   image: ghcr.nju.edu.cn/home-assistant/home-assistant:stable
+  #   networks: [network_cluster]
+  #   restart: on-failure    
+  #   environment:
+  #     http_proxy: ${OPENCLASH_HTTP_PROXY}
+  #     https_proxy: ${OPENCLASH_HTTP_PROXY}
+  #     HTTP_PROXY: ${OPENCLASH_HTTP_PROXY}
+  #     HTTPS_PROXY: ${OPENCLASH_HTTP_PROXY}
+  #     TZ: ${TZ}  
+  #   volumes:
+  #     - nfs_homeassistant_conf:/config
+  #     - /etc/localtime:/etc/localtime:ro
+  #     - /run/dbus:/run/dbus:ro       
+  #   deploy:
+  #     labels:
+  #       - "traefik.enable=true"
+  #       - "traefik.http.routers.homeassistant.rule=Host(`ha.${DOMAIN_SWARM}`),`ha.${DOMAIN_EMERGENCY}`"
+  #       - "traefik.http.routers.homeassistant.entrypoints=websecure"
+  #       - "traefik.http.routers.homeassistant.service=homeassistant"
+  #       - "traefik.http.routers.homeassistant.middlewares=cors-headers@file,noauth-chain@file"
+  #       - "traefik.http.services.homeassistant.loadbalancer.server.port=8123"
+  #       - homepage.group=AI & Automation
+  #       - homepage.name=Home Assistant
+  #       - homepage.icon=home-assistant.png
+  #       - homepage.href=https://ha.${DOMAIN_SWARM}:4/
+  #       - homepage.description=智能家居
+  #       - homepage.siteMonitor=http://homeassistant:8123
+  #       - homepage.weight=10
+  #     mode: replicated
+  #     replicas: 1
+  #     placement:
+  #       constraints:
+  #         - node.labels.type == vm
+  #         - node.labels.automation == true   
 
   homeassistant2:
     image: ghcr.nju.edu.cn/home-assistant/home-assistant:stable
