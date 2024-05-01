@@ -40,7 +40,7 @@ services:
   #         - node.labels.automation == true   
 
   homeassistant2:
-    image: ghcr.nju.edu.cn/home-assistant/home-assistant:stable
+    image: ghcr.io/home-assistant/home-assistant:stable
     networks: [network_cluster]
     restart: on-failure    
     environment:
