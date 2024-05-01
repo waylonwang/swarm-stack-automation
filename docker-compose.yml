@@ -3,44 +3,8 @@ version: "3.4"
 
 services:
   # Home Assistant
-  # homeassistant:
-  #   image: ghcr.nju.edu.cn/home-assistant/home-assistant:stable
-  #   networks: [network_cluster]
-  #   restart: on-failure    
-  #   environment:
-  #     http_proxy: ${OPENCLASH_HTTP_PROXY}
-  #     https_proxy: ${OPENCLASH_HTTP_PROXY}
-  #     HTTP_PROXY: ${OPENCLASH_HTTP_PROXY}
-  #     HTTPS_PROXY: ${OPENCLASH_HTTP_PROXY}
-  #     TZ: ${TZ}  
-  #   volumes:
-  #     - nfs_homeassistant_conf:/config
-  #     - /etc/localtime:/etc/localtime:ro
-  #     - /run/dbus:/run/dbus:ro       
-  #   deploy:
-  #     labels:
-  #       - "traefik.enable=true"
-  #       - "traefik.http.routers.homeassistant.rule=Host(`ha.${DOMAIN_SWARM}`),`ha.${DOMAIN_EMERGENCY}`"
-  #       - "traefik.http.routers.homeassistant.entrypoints=websecure"
-  #       - "traefik.http.routers.homeassistant.service=homeassistant"
-  #       - "traefik.http.routers.homeassistant.middlewares=cors-headers@file,noauth-chain@file"
-  #       - "traefik.http.services.homeassistant.loadbalancer.server.port=8123"
-  #       - homepage.group=AI & Automation
-  #       - homepage.name=Home Assistant
-  #       - homepage.icon=home-assistant.png
-  #       - homepage.href=https://ha.${DOMAIN_SWARM}:4/
-  #       - homepage.description=智能家居
-  #       - homepage.siteMonitor=http://homeassistant:8123
-  #       - homepage.weight=10
-  #     mode: replicated
-  #     replicas: 1
-  #     placement:
-  #       constraints:
-  #         - node.labels.type == vm
-  #         - node.labels.automation == true   
-
-  homeassistant2:
-    image: ghcr.io/home-assistant/home-assistant:stable
+  homeassistant:
+    image: ghcr.nju.edu.cn/home-assistant/home-assistant:stable
     networks: [network_cluster]
     restart: on-failure    
     environment:
@@ -50,31 +14,31 @@ services:
       HTTPS_PROXY: ${OPENCLASH_HTTP_PROXY}
       TZ: ${TZ}  
     volumes:
-      - nfs_homeassistant_conf2:/config
+      - nfs_homeassistant_conf:/config
       - /etc/localtime:/etc/localtime:ro
       - /run/dbus:/run/dbus:ro       
     deploy:
       labels:
         - "traefik.enable=true"
-        - "traefik.http.routers.homeassistant2.rule=Host(`ha2.${DOMAIN_SWARM}`),`ha.${DOMAIN_EMERGENCY}`"
-        - "traefik.http.routers.homeassistant2.entrypoints=websecure"
-        - "traefik.http.routers.homeassistant2.service=homeassistant2"
-        - "traefik.http.routers.homeassistant2.middlewares=cors-headers@file,noauth-chain@file"
-        - "traefik.http.services.homeassistant2.loadbalancer.server.port=8123"
+        - "traefik.http.routers.homeassistant.rule=Host(`ha.${DOMAIN_SWARM}`,`ha.${DOMAIN_EMERGENCY}`)"
+        - "traefik.http.routers.homeassistant.entrypoints=websecure"
+        - "traefik.http.routers.homeassistant.service=homeassistant"
+        - "traefik.http.routers.homeassistant.middlewares=cors-headers@file,noauth-chain@file"
+        - "traefik.http.services.homeassistant.loadbalancer.server.port=8123"
         - homepage.group=AI & Automation
-        - homepage.name=Home Assistant 2
+        - homepage.name=Home Assistant
         - homepage.icon=home-assistant.png
-        - homepage.href=https://ha2.${DOMAIN_SWARM}:4/
+        - homepage.href=https://ha.${DOMAIN_SWARM}:4/
         - homepage.description=智能家居
-        - homepage.siteMonitor=http://homeassistant2:8123
-        - homepage.weight=11
+        - homepage.siteMonitor=http://homeassistant:8123
+        - homepage.weight=10
       mode: replicated
       replicas: 1
       placement:
         constraints:
           - node.labels.type == vm
-          - node.labels.automation == true               
-                     
+          - node.labels.automation == true   
+
 networks:
   network_cluster:
     external: true
@@ -89,9 +53,4 @@ volumes:
     driver: local
     driver_opts:
       <<: *common-keys-volume
-      device: :${NFS_DEVICE}/automation/homeassistant/conf    
-  nfs_homeassistant_conf2:
-    driver: local
-    driver_opts:
-      <<: *common-keys-volume
-      device: :${NFS_DEVICE}/automation/homeassistant2/conf              
+      device: :${NFS_DEVICE}/automation/homeassistant/conf          
