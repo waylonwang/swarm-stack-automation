@@ -17,8 +17,6 @@ services:
       - nfs_homeassistant_conf:/config
       - /etc/localtime:/etc/localtime:ro
       - /run/dbus:/run/dbus:ro       
-    ports:
-      - 8123:8123
     deploy:
       labels:
         - "traefik.enable=true"
