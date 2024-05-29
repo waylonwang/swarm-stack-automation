@@ -23,12 +23,12 @@ services:
         - "traefik.http.routers.homeassistant.rule=Host(`ha.${DOMAIN_SWARM}`,`ha.${DOMAIN_EMERGENCY}`)"
         - "traefik.http.routers.homeassistant.entrypoints=websecure"
         - "traefik.http.routers.homeassistant.service=homeassistant"
-        - "traefik.http.routers.homeassistant.middlewares=cors-headers@file,noauth-chain@file"
+        - "traefik.http.routers.homeassistant.middlewares=auth,cors-headers@file,normal-chain@file"
         - "traefik.http.services.homeassistant.loadbalancer.server.port=8123"
         - homepage.group=AI & Automation
         - homepage.name=Home Assistant
         - homepage.icon=home-assistant.png
-        - homepage.href=https://ha.${DOMAIN_SWARM}:4/
+        - homepage.href=https://ha.${DOMAIN_SWARM}:${EXTERNAL_PORT}/
         - homepage.description=智能家居
         - homepage.siteMonitor=http://homeassistant:8123
         - homepage.weight=10
