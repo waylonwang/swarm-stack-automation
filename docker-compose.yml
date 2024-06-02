@@ -41,7 +41,7 @@ services:
     logging:
       driver: fluentd
       options:
-        tag: swarm.homeassistant
+        tag: docker.automation.homeassistant
         fluentd-address: "fluentd:24224"
         fluentd-async-connect: "true"            
 
