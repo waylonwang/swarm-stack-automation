@@ -25,7 +25,9 @@ x-defines:
     o: addr=${NFS_SERVER},rw,nfsvers=4
 
 services:
-  # Home Assistant
+  # ------------------------------------------------------------
+  # Home Assistant家庭自动化系统
+  # ------------------------------------------------------------
   homeassistant:
     <<: *service-common-ref
     image: ghcr.nju.edu.cn/home-assistant/home-assistant:stable
