@@ -5,10 +5,10 @@ version: "3.4"
 x-defines:
   service-common: &service-common-ref
     networks: [network_cluster]
-    restart: on-failure
+    # restart: on-failure
   env-common: &env-common-ref
-    NO_PROXY: ${NO_PROXY}
-    TZ: ${TZ}    
+    NO_PROXY: ${NO_PROXY:-localhost,127.0.0.1,::1}
+    TZ: ${TZ:-Asia/Shanghai}    
   env-proxy: &env-proxy-ref
     HTTP_PROXY: ${OPENCLASH_HTTP_PROXY}
     HTTPS_PROXY: ${OPENCLASH_HTTP_PROXY}
@@ -20,6 +20,10 @@ x-defines:
       constraints:
         - node.labels.type == vm
         - node.labels.automation == true
+  restart-default: &restart-default-ref
+      restart_policy:
+        condition: on-failure
+        delay: 5s      
   driver-common: &driver-common-ref
     type: nfs
     o: addr=${NFS_SERVER},rw,nfsvers=4
@@ -57,7 +61,7 @@ services:
         - homepage.description=智能家居
         - homepage.siteMonitor=http://homeassistant:8123
         - homepage.weight=10
-      <<: [*deploy-common-ref, *placement-default-ref]
+      <<: [*deploy-common-ref, *placement-default-ref, *restart-default-ref]
 
 networks:
   network_cluster:
