@@ -5,7 +5,6 @@ version: "3.4"
 x-defines:
   service-common: &service-common-ref
     networks: [network_cluster]
-    # restart: on-failure
   env-common: &env-common-ref
     NO_PROXY: ${NO_PROXY:-localhost,127.0.0.1,::1}
     TZ: ${TZ:-Asia/Shanghai}    
@@ -21,12 +20,12 @@ x-defines:
         - node.labels.type == vm
         - node.labels.automation == true
   restart-default: &restart-default-ref
-      restart_policy:
-        condition: on-failure
-        delay: 5s      
+    restart_policy:
+      condition: on-failure
+      delay: 5s      
   driver-common: &driver-common-ref
     type: nfs
-    o: addr=${NFS_SERVER},rw,nfsvers=4
+    o: addr=${NFS_SERVER},rw, nfsvers=4
 
 services:
   # ------------------------------------------------------------
