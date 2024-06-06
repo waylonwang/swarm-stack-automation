@@ -14,15 +14,14 @@ x-defines:
   deploy-common: &deploy-common-ref
     mode: replicated
     replicas: 1
+    restart_policy:
+      condition: on-failure
+      delay: 5s      
   placement-default: &placement-default-ref
     placement:
       constraints:
         - node.labels.type == vm
         - node.labels.automation == true
-  restart-default: &restart-default-ref
-    restart_policy:
-      condition: on-failure
-      delay: 5s      
   driver-common: &driver-common-ref
     type: nfs
     o: addr=${NFS_SERVER},rw, nfsvers=4
@@ -60,7 +59,7 @@ services:
         - homepage.description=智能家居
         - homepage.siteMonitor=http://homeassistant:8123
         - homepage.weight=10
-      <<: [*deploy-common-ref, *placement-default-ref, *restart-default-ref]
+      <<: [*deploy-common-ref, *placement-default-ref]
 
 networks:
   network_cluster:
