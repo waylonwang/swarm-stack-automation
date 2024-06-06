@@ -1,30 +1,51 @@
+---
 # Update Time: 2024-1-4 1:05
 version: "3.4"
+
+x-defines:
+  service-common: &service-common-ref
+    networks: [network_cluster]
+    restart: on-failure
+  deploy-common: &deploy-common-ref
+    mode: replicated
+    replicas: 1
+  placement-default: &placement-default-ref
+    placement:
+      constraints:
+        - node.labels.type == vm
+        - node.labels.automation == true
+  driver-common: &driver-common-ref
+    type: nfs
+    o: addr=${NFS_SERVER},rw,nfsvers=4
 
 services:
   # Home Assistant
   homeassistant:
     image: ghcr.nju.edu.cn/home-assistant/home-assistant:stable
-    networks: [network_cluster]
-    restart: on-failure    
+    <<: *service-common-ref
     environment:
       http_proxy: ${OPENCLASH_HTTP_PROXY}
       https_proxy: ${OPENCLASH_HTTP_PROXY}
       HTTP_PROXY: ${OPENCLASH_HTTP_PROXY}
       HTTPS_PROXY: ${OPENCLASH_HTTP_PROXY}
-      TZ: ${TZ}  
+      TZ: ${TZ}
     volumes:
       - nfs_homeassistant_conf:/config
       - /etc/localtime:/etc/localtime:ro
-      - /run/dbus:/run/dbus:ro       
+      - /run/dbus:/run/dbus:ro
+    logging:
+      driver: fluentd
+      options:
+        tag: docker.automation.homeassistant
+        fluentd-async-connect: "true"
     deploy:
       labels:
-        - "traefik.enable=true"
-        - "traefik.http.routers.homeassistant.rule=Host(`ha.${DOMAIN_SWARM}`,`ha.${DOMAIN_EMERGENCY}`)"
-        - "traefik.http.routers.homeassistant.entrypoints=websecure"
-        - "traefik.http.routers.homeassistant.service=homeassistant"
-        - "traefik.http.routers.homeassistant.middlewares=auth,cors-headers@file,normal-chain@file"
-        - "traefik.http.services.homeassistant.loadbalancer.server.port=8123"
+        - traefik.enable=true
+        - traefik.http.routers.homeassistant.rule=Host(`ha.${DOMAIN_SWARM}`,`ha.${DOMAIN_EMERGENCY}`)
+        - traefik.http.routers.homeassistant.entrypoints=websecure
+        - traefik.http.routers.homeassistant.service=homeassistant
+        - traefik.http.routers.homeassistant.middlewares=auth,cors-headers@file,normal-chain@file
+        - traefik.http.services.homeassistant.loadbalancer.server.port=8123
         - homepage.group=AI & Automation
         - homepage.name=Home Assistant
         - homepage.icon=home-assistant.png
@@ -32,30 +53,17 @@ services:
         - homepage.description=智能家居
         - homepage.siteMonitor=http://homeassistant:8123
         - homepage.weight=10
-      mode: replicated
-      replicas: 1
-      placement:
-        constraints:
-          - node.labels.type == vm
-          - node.labels.automation == true   
-    logging:
-      driver: fluentd
-      options:
-        tag: docker.automation.homeassistant
-        fluentd-async-connect: "true"            
+      <<: [*deploy-common-ref, *placement-default-ref]
 
 networks:
   network_cluster:
     external: true
-
-x-common-keys-volume: &common-keys-volume
-  type: nfs
-  o: addr=${NFS_SERVER},rw,nfsvers=4
-
+    
 volumes:
   # NFS
   nfs_homeassistant_conf:
     driver: local
     driver_opts:
-      <<: *common-keys-volume
-      device: :${NFS_DEVICE}/automation/homeassistant/conf          
+      <<: *driver-common-ref
+      device: :${NFS_DEVICE}/automation/homeassistant/conf
+...
