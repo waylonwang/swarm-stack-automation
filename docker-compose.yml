@@ -6,6 +6,12 @@ x-defines:
   service-common: &service-common-ref
     networks: [network_cluster]
     restart: on-failure
+  env-common: &env-common-ref
+    NO_PROXY: ${NO_PROXY}
+    TZ: ${TZ}    
+  env-proxy: &env-proxy-ref
+    HTTP_PROXY: ${OPENCLASH_HTTP_PROXY}
+    HTTPS_PROXY: ${OPENCLASH_HTTP_PROXY}
   deploy-common: &deploy-common-ref
     mode: replicated
     replicas: 1
@@ -21,14 +27,10 @@ x-defines:
 services:
   # Home Assistant
   homeassistant:
-    image: ghcr.nju.edu.cn/home-assistant/home-assistant:stable
     <<: *service-common-ref
+    image: ghcr.nju.edu.cn/home-assistant/home-assistant:stable
     environment:
-      http_proxy: ${OPENCLASH_HTTP_PROXY}
-      https_proxy: ${OPENCLASH_HTTP_PROXY}
-      HTTP_PROXY: ${OPENCLASH_HTTP_PROXY}
-      HTTPS_PROXY: ${OPENCLASH_HTTP_PROXY}
-      TZ: ${TZ}
+      <<: [*env-common-ref, *env-proxy-ref]
     volumes:
       - nfs_homeassistant_conf:/config
       - /etc/localtime:/etc/localtime:ro
@@ -58,7 +60,7 @@ services:
 networks:
   network_cluster:
     external: true
-    
+
 volumes:
   # NFS
   nfs_homeassistant_conf:
