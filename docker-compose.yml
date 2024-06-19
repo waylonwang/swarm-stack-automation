@@ -35,7 +35,7 @@ services:
   homeassistant:
     <<: *service-common-ref
     # image-ref: ghcr.io/home-assistant/home-assistant:stable
-    image: ghcr.nju.edu.cn/home-assistant/home-assistant:stable
+    image: registry.${DOMAIN_SWARM}:${EXTERNAL_PORT}/home-assistant/home-assistant:stable
     environment:
       <<: [*env-common-ref, *env-proxy-ref]
     volumes:
