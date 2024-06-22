@@ -64,41 +64,6 @@ services:
         - homepage.weight=10
       <<: [*deploy-common-ref, *placement-default-ref]
 
-
-  crowdsec:
-    <<: *service-common-ref
-    # image-ref: crowdsecurity/crowdsec:v1.6.2
-    image: registry.${DOMAIN_SWARM}:${EXTERNAL_PORT}/crowdsecurity/crowdsec:v1.6.2
-    environment:
-      <<: *env-common-ref
-      PGID: 1000
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock:ro
-      # - ./crowdsec/acquis.yaml:/etc/crowdsec/acquis.yaml
-      - nfs_crowdsec_data:/var/lib/crowdsec/data
-      - nfs_crowdsec_conf:/etc/crowdsec
-    logging:
-      driver: fluentd
-      options:
-        tag: docker.business.crowdsec
-        fluentd-async-connect: "true"
-    deploy:
-      labels:
-        - traefik.enable=true
-        - traefik.http.routers.crowdsec.rule=Host(`crowdsec.${DOMAIN_SWARM}`,`crowdsec.${DOMAIN_EMERGENCY}`)
-        - traefik.http.routers.crowdsec.entrypoints=websecure
-        - traefik.http.routers.crowdsec.service=crowdsec
-        - traefik.http.routers.crowdsec.middlewares=auth,normal-chain@file
-        - traefik.http.services.crowdsec.loadbalancer.server.port=8080
-        - homepage.group=Application
-        - homepage.name=crowdsec
-        - homepage.icon=crowdsec.png
-        - homepage.href=https://crowdsec.${DOMAIN_SWARM}:${EXTERNAL_PORT}/
-        - homepage.description=crowdsec
-        - homepage.siteMonitor=http://crowdsec:8080
-        - homepage.weight=60
-      <<: [*deploy-common-ref, *placement-default-ref]     
-
 networks:
   network_cluster:
     external: true
@@ -110,14 +75,4 @@ volumes:
     driver_opts:
       <<: *driver-common-ref
       device: :${NFS_DEVICE}/automation/homeassistant/conf
-  nfs_crowdsec_conf:
-    driver: local
-    driver_opts:
-      <<: *driver-common-ref
-      device: :${NFS_DEVICE}/application/secret/crowdsec/conf
-  nfs_crowdsec_data:
-    driver: local
-    driver_opts:
-      <<: *driver-common-ref
-      device: :${NFS_DEVICE}/application/secret/crowdsec/data          
 ...
