@@ -64,6 +64,42 @@ services:
         - homepage.weight=10
       <<: [*deploy-common-ref, *placement-default-ref]
 
+  # ------------------------------------------------------------
+  # n8n Workflow Automation
+  # ------------------------------------------------------------
+  n8n:
+    <<: *service-common-ref
+    # image-ref: docker.n8n.io/n8nio/n8n
+    image: registry.${DOMAIN_SWARM}:${EXTERNAL_PORT}/n8nio/n8n:latest
+    environment:
+      <<: [*env-common-ref, *env-proxy-ref]
+    volumes:
+      - nfs_n8n_data:/home/node/.n8n
+    logging:
+      driver: fluentd
+      options:
+        tag: docker.automation.n8n
+        fluentd-async-connect: "true"
+    deploy:
+      labels:
+        # Traefik配置
+        - traefik.enable=true
+        - traefik.http.routers.n8n.rule=Host(`n8n.${DOMAIN_SWARM}`,`n8n.${DOMAIN_EMERGENCY}`)
+        - traefik.http.routers.n8n.entrypoints=websecure
+        - traefik.http.routers.n8n.service=n8n
+        - traefik.http.routers.n8n.middlewares=auth,cors-headers@file,normal-chain@file
+        - traefik.http.services.n8n.loadbalancer.server.port=5678
+        
+        # Homepage配置
+        - homepage.group=AI & Automation
+        - homepage.name=n8n
+        - homepage.icon=n8n.png
+        - homepage.href=https://n8n.${DOMAIN_SWARM}:${EXTERNAL_PORT}/
+        - homepage.description=Workflow automation platform
+        - homepage.siteMonitor=http://n8n:5678
+        - homepage.weight=100
+      <<: [*deploy-common-ref, *placement-default-ref]
+
 networks:
   network_cluster:
     external: true
@@ -75,4 +111,9 @@ volumes:
     driver_opts:
       <<: *driver-common-ref
       device: :${NFS_DEVICE}/automation/homeassistant/conf
+  nfs_n8n_data:
+    driver: local
+    driver_opts:
+      <<: *driver-common-ref
+      device: :${NFS_DEVICE}/automation/n8n/data
 ...
