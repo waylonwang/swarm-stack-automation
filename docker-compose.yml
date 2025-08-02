@@ -125,5 +125,5 @@ volumes:
     driver: local
     driver_opts:
       <<: *driver-common-ref
-      device: :${NFS_DEVICE}/automation/n8n/i18n      
+      device: :${NFS_DEVICE}/automation/n8n/i18n/editor-ui-dist
 ...
