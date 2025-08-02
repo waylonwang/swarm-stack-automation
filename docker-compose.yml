@@ -73,7 +73,7 @@ services:
     image: registry.${DOMAIN_SWARM}:${EXTERNAL_PORT}/n8nio/n8n:latest
     environment:
       <<: [*env-common-ref, *env-proxy-ref]
-      user: root      
+      N8N_ENCRYPTION_KEY: ${N8N_ENCRYPTION_KEY}
     volumes:
       - nfs_n8n_data:/home/node/.n8n
     logging:
