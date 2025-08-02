@@ -79,6 +79,7 @@ services:
       N8N_SECURE_COOKIE: "false"
     volumes:
       - nfs_n8n_data:/home/node/.n8n
+      - nfs_n8n_i18n:/usr/local/lib/node_modules/n8n/node_modules/n8n-editor-ui/dist
     logging:
       driver: fluentd
       options:
@@ -120,4 +121,9 @@ volumes:
     driver_opts:
       <<: *driver-common-ref
       device: :${NFS_DEVICE}/automation/n8n/data
+  nfs_n8n_i18n:
+    driver: local
+    driver_opts:
+      <<: *driver-common-ref
+      device: :${NFS_DEVICE}/automation/n8n/i18n      
 ...
