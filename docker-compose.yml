@@ -74,6 +74,9 @@ services:
     environment:
       <<: [*env-common-ref, *env-proxy-ref]
       N8N_ENCRYPTION_KEY: ${N8N_ENCRYPTION_KEY}
+      N8N_DEFAULT_LOCALE: zh-CN
+      N8N_RUNNERS_ENABLED: "true"
+      N8N_SECURE_COOKIE: "false"
     volumes:
       - nfs_n8n_data:/home/node/.n8n
     logging:
