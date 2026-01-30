@@ -126,7 +126,7 @@ services:
       HOME: /home/code
     volumes:
       - nfs_openclaw_conf:/home/node/.clawdbot
-      - nfs_openclaw_workspce:/home/node/clawd
+      - nfs_openclaw_workspace:/home/node/clawd
     ports:
       - 18790:18790
       - 18789:18789
