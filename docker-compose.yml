@@ -125,8 +125,8 @@ services:
       <<: [*env-common-ref, *env-proxy-ref]
       HOME: /home/code
     volumes:
-      - nfs_openclaw_conf:/home/node/.clawdbot
-      - nfs_openclaw_workspace:/home/node/clawd
+      - nfs_openclaw_conf:/home/node/.openclow
+      - nfs_openclaw_workspace:/home/node/.openclaw/workspace
     ports:
       - 18790:18790
       - 18789:18789
