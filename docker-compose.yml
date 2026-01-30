@@ -67,42 +67,91 @@ services:
   # ------------------------------------------------------------
   # n8n Workflow Automation
   # ------------------------------------------------------------
-  n8n:
+  # n8n:
+  #   <<: *service-common-ref
+  #   # image-ref: docker.n8n.io/n8nio/n8n
+  #   image: registry.${DOMAIN_SWARM}:${EXTERNAL_PORT}/n8nio/n8n:latest
+  #   environment:
+  #     <<: [*env-common-ref, *env-proxy-ref]
+  #     N8N_ENCRYPTION_KEY: ${N8N_ENCRYPTION_KEY}
+  #     N8N_DEFAULT_LOCALE: zh-CN
+  #     N8N_RUNNERS_ENABLED: "true"
+  #     N8N_SECURE_COOKIE: "false"
+  #   volumes:
+  #     - nfs_n8n_data:/home/node/.n8n
+  #     - nfs_n8n_ui:/usr/local/lib/node_modules/n8n/node_modules/n8n-editor-ui/dist
+  #   logging:
+  #     driver: fluentd
+  #     options:
+  #       tag: docker.automation.n8n
+  #       fluentd-async-connect: "true"
+  #   deploy:
+  #     labels:
+  #       # Traefik配置
+  #       - traefik.enable=true
+  #       - traefik.http.routers.n8n.rule=Host(`n8n.${DOMAIN_SWARM}`,`n8n.${DOMAIN_EMERGENCY}`)
+  #       - traefik.http.routers.n8n.entrypoints=websecure
+  #       - traefik.http.routers.n8n.service=n8n
+  #       - traefik.http.routers.n8n.middlewares=auth,cors-headers@file,normal-chain@file
+  #       - traefik.http.services.n8n.loadbalancer.server.port=5678
+        
+  #       # Homepage配置
+  #       - homepage.group=AI & Automation
+  #       - homepage.name=n8n
+  #       - homepage.icon=n8n.png
+  #       - homepage.href=https://n8n.${DOMAIN_SWARM}:${EXTERNAL_PORT}/
+  #       - homepage.description=Workflow automation platform
+  #       - homepage.siteMonitor=http://n8n:5678
+  #       - homepage.weight=100
+  #     <<: [*deploy-common-ref, *placement-default-ref]
+
+  # ------------------------------------------------------------
+  # openclaw gateway
+  # ------------------------------------------------------------
+  openclaw-gateway:
     <<: *service-common-ref
-    # image-ref: docker.n8n.io/n8nio/n8n
-    image: registry.${DOMAIN_SWARM}:${EXTERNAL_PORT}/n8nio/n8n:latest
+    # image-ref: ghcr.io/waylonwang/openclaw:main
+    image: registry.${DOMAIN_SWARM}:${EXTERNAL_PORT}/openclaw/openclaw:main    
     environment:
       <<: [*env-common-ref, *env-proxy-ref]
-      N8N_ENCRYPTION_KEY: ${N8N_ENCRYPTION_KEY}
-      N8N_DEFAULT_LOCALE: zh-CN
-      N8N_RUNNERS_ENABLED: "true"
-      N8N_SECURE_COOKIE: "false"
+      HOME: /home/code
     volumes:
-      - nfs_n8n_data:/home/node/.n8n
-      - nfs_n8n_ui:/usr/local/lib/node_modules/n8n/node_modules/n8n-editor-ui/dist
+      - nfs_openclaw_conf:/home/node/.clawdbot
+      - nfs_openclaw_workspce:/home/node/clawd
+    ports:
+      - 18790:18790
+      - 18789:18789
+    init: true
+    command: [
+      "node",
+      "dist/index.js",
+      "gateway",
+      "--bind",
+      "-lan",
+      "--port",
+      "18789"
+    ]
+
     logging:
       driver: fluentd
       options:
-        tag: docker.automation.n8n
+        tag: docker.automation.openclaw-gateway
         fluentd-async-connect: "true"
     deploy:
       labels:
-        # Traefik配置
         - traefik.enable=true
-        - traefik.http.routers.n8n.rule=Host(`n8n.${DOMAIN_SWARM}`,`n8n.${DOMAIN_EMERGENCY}`)
-        - traefik.http.routers.n8n.entrypoints=websecure
-        - traefik.http.routers.n8n.service=n8n
-        - traefik.http.routers.n8n.middlewares=auth,cors-headers@file,normal-chain@file
-        - traefik.http.services.n8n.loadbalancer.server.port=5678
-        
-        # Homepage配置
+        - traefik.http.routers.openclaw-gateway.rule=Host(`claw.${DOMAIN_SWARM}`,`claw.${DOMAIN_EMERGENCY}`)
+        - traefik.http.routers.openclaw-gateway.entrypoints=websecure
+        - traefik.http.routers.openclaw-gateway.service=openclaw-gateway
+        - traefik.http.routers.openclaw-gateway.middlewares=auth,cors-headers@file,normal-chain@file
+        - traefik.http.services.openclaw-gateway.loadbalancer.server.port=18789
         - homepage.group=AI & Automation
-        - homepage.name=n8n
-        - homepage.icon=n8n.png
-        - homepage.href=https://n8n.${DOMAIN_SWARM}:${EXTERNAL_PORT}/
-        - homepage.description=Workflow automation platform
-        - homepage.siteMonitor=http://n8n:5678
-        - homepage.weight=100
+        - homepage.name=Open Claw
+        - homepage.icon=open-claw.png
+        - homepage.href=https://ha.${DOMAIN_SWARM}:${EXTERNAL_PORT}/
+        - homepage.description=Open Claw
+        - homepage.siteMonitor=http://homeassistant:8123
+        - homepage.weight=10
       <<: [*deploy-common-ref, *placement-default-ref]
 
 networks:
@@ -126,4 +175,14 @@ volumes:
     driver_opts:
       <<: *driver-common-ref
       device: :${NFS_DEVICE}/automation/n8n/i18n/editor-ui-dist
+  nfs_openclaw_conf: 
+    driver: local
+    driver_opts:
+      <<: *driver-common-ref
+      device: :${NFS_DEVICE}/automation/openclaw/conf
+  nfs_openclaw_workspace: 
+    driver: local
+    driver_opts:
+      <<: *driver-common-ref
+      device: :${NFS_DEVICE}/automation/openclaw/workspace      
 ...
