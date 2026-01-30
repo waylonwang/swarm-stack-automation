@@ -117,7 +117,7 @@ services:
       "dist/index.js",
       "gateway",
       "--bind",
-      "-lan",
+      "lan",
       "--port",
       "18789",
       "--allow-unconfigured"
