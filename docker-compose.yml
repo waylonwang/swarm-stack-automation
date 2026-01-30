@@ -111,7 +111,16 @@ services:
   openclaw-gateway:
     <<: *service-common-ref
     # image-ref: ghcr.io/waylonwang/openclaw:main
-    image: registry.${DOMAIN_SWARM}:${EXTERNAL_PORT}/openclaw/openclaw:main    
+    image: registry.${DOMAIN_SWARM}:${EXTERNAL_PORT}/openclaw/openclaw:main   
+    command: [
+      "node",
+      "dist/index.js",
+      "gateway",
+      "--bind",
+      "-lan",
+      "--port",
+      "18789"
+    ]     
     environment:
       <<: [*env-common-ref, *env-proxy-ref]
       HOME: /home/code
@@ -121,17 +130,6 @@ services:
     ports:
       - 18790:18790
       - 18789:18789
-    init: true
-    command: [
-      "node",
-      "dist/index.js",
-      "gateway",
-      "--bind",
-      "-lan",
-      "--port",
-      "18789"
-    ]
-
     logging:
       driver: fluentd
       options:
