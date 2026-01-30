@@ -124,6 +124,7 @@ services:
     environment:
       <<: [*env-common-ref, *env-proxy-ref]
       HOME: /home/code
+      TERM: xterm-256color
     volumes:
       - nfs_openclaw_conf:/home/node/.openclow
       - nfs_openclaw_workspace:/home/node/.openclaw/workspace
@@ -150,6 +151,23 @@ services:
         - homepage.description=Open Claw
         - homepage.siteMonitor=http://homeassistant:8123
         - homepage.weight=10
+      <<: [*deploy-common-ref, *placement-default-ref]
+  openclaw-cli:
+    <<: *service-common-ref
+    # image-ref: ghcr.io/waylonwang/openclaw:main  
+    image: registry.${DOMAIN_SWARM}:${EXTERNAL_PORT}/openclaw/openclaw:main  
+    entrypoint: ["node", "dist/index.js"]    
+    environment:
+      <<: [*env-common-ref, *env-proxy-ref]
+      HOME: /home/node
+      TERM: xterm-256color
+      BROWSER: echo
+    volumes:
+      - nfs_openclaw_conf:/home/node/.openclow
+      - nfs_openclaw_workspace:/home/node/.openclaw/workspace      
+    stdin_open: true
+    tty: true
+    deploy:
       <<: [*deploy-common-ref, *placement-default-ref]
 
 networks:
