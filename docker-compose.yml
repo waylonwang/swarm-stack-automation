@@ -125,10 +125,11 @@ services:
       <<: [*env-common-ref, *env-proxy-ref]
       HOME: /home/node
       TERM: xterm-256color
-      OPENCLAW_GATEWAY_TOKEN: "zRMxEKpTw6AL3fdUdkSm7F3A1etkC4MG"
+      OPENCLAW_GATEWAY_TOKEN: ${OPENCLAW_GATEWAY_TOKEN}
     volumes:
       - nfs_openclaw_conf:/home/node/.openclaw
       - nfs_openclaw_workspace:/home/node/.openclaw/workspace
+      - nfs_openclaw_users:/Users
     ports:
       - 18790:18790
       - 18789:18789
@@ -163,7 +164,7 @@ services:
       HOME: /home/node
       TERM: xterm-256color
       BROWSER: echo
-      OPENCLAW_GATEWAY_TOKEN: "zRMxEKpTw6AL3fdUdkSm7F3A1etkC4MG"
+      OPENCLAW_GATEWAY_TOKEN: ${OPENCLAW_GATEWAY_TOKEN}
     volumes:
       - nfs_openclaw_conf:/home/node/.openclaw
       - nfs_openclaw_workspace:/home/node/.openclaw/workspace      
@@ -202,5 +203,10 @@ volumes:
     driver: local
     driver_opts:
       <<: *driver-common-ref
-      device: :${NFS_DEVICE}/automation/openclaw/workspace      
+      device: :${NFS_DEVICE}/automation/openclaw/workspace  
+  nfs_openclaw_users: 
+    driver: local
+    driver_opts:
+      <<: *driver-common-ref
+      device: :${NFS_DEVICE}/automation/openclaw/users            
 ...
