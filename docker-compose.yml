@@ -137,6 +137,7 @@ services:
     volumes:
       - nfs_openclaw_conf:/home/node/.openclaw
       - nfs_openclaw_workspace:/home/node/openclaw
+      - nfs_openclaw_app:/app
     ports:
       - 18790:18790
       - 18789:18789
@@ -192,5 +193,10 @@ volumes:
     driver: local
     driver_opts:
       <<: *driver-common-ref
-      device: :${NFS_DEVICE}/automation/openclaw/workspace            
+      device: :${NFS_DEVICE}/automation/openclaw/workspace   
+  nfs_openclaw_app: 
+    driver: local
+    driver_opts:
+      <<: *driver-common-ref
+      device: :${NFS_DEVICE}/automation/openclaw/wapp                
 ...
