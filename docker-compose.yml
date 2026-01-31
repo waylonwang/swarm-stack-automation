@@ -19,6 +19,18 @@ x-defines:
     restart_policy:
       condition: on-failure
       delay: 5s      
+  deploy-common: &deploy-common-ref
+    mode: replicated
+    replicas: 1
+    restart_policy:
+      condition: on-failure
+      delay: 5s      
+  deploy-openclaw: &deploy-openclaw-ref
+    mode: replicated
+    replicas: 1
+    restart_policy:
+      condition: any
+      delay: 5s          
   placement-default: &placement-default-ref
     placement:
       constraints:
@@ -154,27 +166,7 @@ services:
         - homepage.description=Open Claw
         - homepage.siteMonitor=http://homeassistant:8123
         - homepage.weight=10
-      <<: [*deploy-common-ref, *placement-default-ref]
-  openclaw-cli:
-    <<: *service-common-ref
-    # image-ref: ghcr.io/waylonwang/openclaw:main  
-    image: registry.${DOMAIN_SWARM}:${EXTERNAL_PORT}/openclaw/openclaw:main  
-    entrypoint: ["node", "dist/index.js"]    
-    environment:
-      <<: [*env-common-ref, *env-proxy-ref]
-      HOME: /home/node
-      OPENCLAW_CONFIG_DIR: /home/node/.openclaw
-      OPENCLAW_WORKSPACE_DIR: /home/node/openclaw
-      TERM: xterm-256color
-      BROWSER: echo
-      OPENCLAW_GATEWAY_TOKEN: ${OPENCLAW_GATEWAY_TOKEN}
-    volumes:
-      - nfs_openclaw_conf:/home/node/.openclaw
-      - nfs_openclaw_workspace:/home/node/openclaw     
-    stdin_open: true
-    tty: true
-    deploy:
-      <<: [*deploy-common-ref, *placement-default-ref]
+      <<: [*deploy-openclaw-ref, *placement-default-ref]
 
 networks:
   network_cluster:
