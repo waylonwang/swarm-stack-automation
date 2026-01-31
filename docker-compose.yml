@@ -198,5 +198,5 @@ volumes:
     driver: local
     driver_opts:
       <<: *driver-common-ref
-      device: :${NFS_DEVICE}/automation/openclaw/wapp                
+      device: :${NFS_DEVICE}/automation/openclaw/app                
 ...
