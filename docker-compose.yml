@@ -131,7 +131,6 @@ services:
     volumes:
       - nfs_openclaw_conf:/home/node/.openclaw
       - nfs_openclaw_workspace:/home/node/openclaw
-      - nfs_openclaw_users:/Users
     ports:
       - 18790:18790
       - 18789:18789
