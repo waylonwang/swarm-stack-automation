@@ -117,7 +117,7 @@ services:
   openclaw-gateway:
     <<: *service-common-ref
     # image-ref: ghcr.io/waylonwang/openclaw:main
-    image: registry.${DOMAIN_SWARM}:${EXTERNAL_PORT}/openclaw/openclaw:main   
+    image: registry.${DOMAIN_SWARM}:${EXTERNAL_PORT}/openclaw/openclaw:feature-glm-zai-providers   
     command: [
       "node",
       "dist/index.js",
@@ -137,7 +137,6 @@ services:
     volumes:
       - nfs_openclaw_conf:/home/node/.openclaw
       - nfs_openclaw_workspace:/home/node/openclaw
-      - nfs_openclaw_app:/app
     ports:
       - 18790:18790
       - 18789:18789
