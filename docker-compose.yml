@@ -137,6 +137,7 @@ services:
     volumes:
       - nfs_openclaw_conf:/home/node/.openclaw
       - nfs_openclaw_workspace:/home/node/openclaw
+      - nfs_openclaw_ssh:/home/node/.ssh
     ports:
       - 18790:18790
       - 18789:18789
@@ -193,9 +194,9 @@ volumes:
     driver_opts:
       <<: *driver-common-ref
       device: :${NFS_DEVICE}/automation/openclaw/workspace   
-  nfs_openclaw_app: 
+  nfs_openclaw_ssh: 
     driver: local
     driver_opts:
       <<: *driver-common-ref
-      device: :${NFS_DEVICE}/automation/openclaw/app                
+      device: :${NFS_DEVICE}/automation/openclaw/ssh            
 ...
