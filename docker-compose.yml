@@ -200,7 +200,7 @@ volumes:
     driver_opts:
       <<: *driver-common-ref
       device: :${NFS_DEVICE}/automation/openclaw/ssh   
-  nfs_sopenclaw_attach_stacks:
+  nfs_openclaw_attach_stacks:
     driver: local
     driver_opts:
       <<: *driver-common-ref
