@@ -138,6 +138,7 @@ services:
       - nfs_openclaw_conf:/home/node/.openclaw
       - nfs_openclaw_workspace:/home/node/openclaw
       - nfs_openclaw_ssh:/home/node/.ssh
+      - nfs_openclaw_attach_stacks:/home/stacks
     ports:
       - 18790:18790
       - 18789:18789
@@ -198,5 +199,10 @@ volumes:
     driver: local
     driver_opts:
       <<: *driver-common-ref
-      device: :${NFS_DEVICE}/automation/openclaw/ssh            
+      device: :${NFS_DEVICE}/automation/openclaw/ssh   
+  nfs_sopenclaw_attach_stacks:
+    driver: local
+    driver_opts:
+      <<: *driver-common-ref
+      device: :${NFS_DEVICE}/base/swarm-config/stacks
 ...
