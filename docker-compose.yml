@@ -127,8 +127,11 @@ services:
       "--port",
       "18789"
     ]     
+    dns:
+      - 172.18.0.1    # OpenClash dnsmasq 
+      - 223.5.5.5     # 备用 DNS   
     environment:
-      <<: [*env-common-ref, *env-proxy-ref]
+      <<: [*env-common-ref]
       HOME: /home/node
       OPENCLAW_CONFIG_DIR: /home/node/.openclaw
       OPENCLAW_WORKSPACE_DIR: /home/node/openclaw
