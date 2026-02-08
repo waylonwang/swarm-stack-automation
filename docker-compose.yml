@@ -128,13 +128,8 @@ services:
       "18789"
     ]     
     dns:
-<<<<<<< HEAD
-      - 172.18.0.1    # OpenClash dnsmasq 
+      - 192.168.11.2    # OpenClash dnsmasq 
       - 223.5.5.5     # 备用 DNS   
-=======
-      - 172.18.0.1
-      - 223.5.5.5  
->>>>>>> a60b383bf1bbc233e1d661b4e36dae7b2aff0818
     environment:
       <<: [*env-common-ref]
       HOME: /home/node
