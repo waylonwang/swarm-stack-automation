@@ -42,11 +42,8 @@ services:
     <<: *service-common-ref
     # image-ref: ghcr.io/home-assistant/home-assistant:stable
     image: registry.${DOMAIN_SWARM}:${EXTERNAL_PORT}/home-assistant/home-assistant:stable
-    dns:
-      - 172.18.0.1    # OpenClash dnsmasq 
-      - 223.5.5.5     # 备用 DNS   
     environment:
-      <<: [*env-common-ref]
+      <<: [*env-common-ref, *env-proxy-ref]
     volumes:
       - nfs_homeassistant_conf:/config
       - /etc/localtime:/etc/localtime:ro
@@ -130,8 +127,11 @@ services:
       "--port",
       "18789"
     ]     
+    dns:
+      - 172.18.0.1    # OpenClash dnsmasq 
+      - 223.5.5.5     # 备用 DNS   
     environment:
-      <<: [*env-common-ref, *env-proxy-ref]
+      <<: [*env-common-ref]
       HOME: /home/node
       OPENCLAW_CONFIG_DIR: /home/node/.openclaw
       OPENCLAW_WORKSPACE_DIR: /home/node/openclaw
@@ -208,5 +208,4 @@ volumes:
     driver_opts:
       <<: *driver-common-ref
       device: :${NFS_DEVICE}/base/swarm-config/stacks
-
 ...
