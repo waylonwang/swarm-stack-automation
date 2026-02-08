@@ -128,8 +128,8 @@ services:
       "18789"
     ]     
     dns:
-      - 172.18.0.1    # OpenClash dnsmasq 
-      - 223.5.5.5     # 备用 DNS   
+      - 172.18.0.1
+      - 223.5.5.5  
     environment:
       <<: [*env-common-ref]
       HOME: /home/node
@@ -209,3 +209,4 @@ volumes:
       <<: *driver-common-ref
       device: :${NFS_DEVICE}/base/swarm-config/stacks
 ...
+
