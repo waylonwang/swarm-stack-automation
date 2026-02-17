@@ -138,9 +138,7 @@ services:
       TERM: xterm-256color
       OPENCLAW_GATEWAY_TOKEN: ${OPENCLAW_GATEWAY_TOKEN}
     volumes:
-      - nfs_openclaw_conf:/home/node/.openclaw
-      - nfs_openclaw_workspace:/home/node/openclaw
-      - nfs_openclaw_ssh:/home/node/.ssh
+      - nfs_openclaw_conf:/home/node
       - nfs_openclaw_attach_stacks:/home/stacks
     ports:
       - 18790:18790
@@ -193,16 +191,6 @@ volumes:
     driver_opts:
       <<: *driver-common-ref
       device: :${NFS_DEVICE}/automation/openclaw/conf
-  nfs_openclaw_workspace: 
-    driver: local
-    driver_opts:
-      <<: *driver-common-ref
-      device: :${NFS_DEVICE}/automation/openclaw/workspace   
-  nfs_openclaw_ssh: 
-    driver: local
-    driver_opts:
-      <<: *driver-common-ref
-      device: :${NFS_DEVICE}/automation/openclaw/ssh   
   nfs_openclaw_attach_stacks:
     driver: local
     driver_opts:
