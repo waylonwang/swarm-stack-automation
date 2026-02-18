@@ -116,8 +116,8 @@ services:
   # ------------------------------------------------------------
   openclaw-gateway:
     <<: *service-common-ref
-    # image-ref: ghcr.io/waylonwang/openclaw:main
-    image: registry.${DOMAIN_SWARM}:${EXTERNAL_PORT}/openclaw/openclaw:feature-glm-zai-providers   
+    # image-ref: ghcr.io/openclaw/openclaw:2026.2.17
+    image: registry.${DOMAIN_SWARM}:${EXTERNAL_PORT}/openclaw/openclaw:2026.2.17
     command: [
       "node",
       "dist/index.js",
