@@ -116,8 +116,8 @@ services:
   # ------------------------------------------------------------
   openclaw-gateway:
     <<: *service-common-ref
-    # image-ref: ghcr.io/openclaw/openclaw:2026.2.19
-    image: registry.${DOMAIN_SWARM}:${EXTERNAL_PORT}/openclaw/openclaw:2026.2.19
+    # image-ref: ghcr.io/openclaw/openclaw:2026.3.8
+    image: registry.${DOMAIN_SWARM}:${EXTERNAL_PORT}/openclaw/openclaw:2026.3.8
     command: [
       "node",
       "dist/index.js",
